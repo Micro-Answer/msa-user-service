@@ -13,10 +13,10 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class UserSignUpResponse {
+public class MessageResponse {
 	private String result;
 
-	public UserSignUpResponse(String result) {
+	public MessageResponse(String result) {
 		this.result = result;
 	}
 }
