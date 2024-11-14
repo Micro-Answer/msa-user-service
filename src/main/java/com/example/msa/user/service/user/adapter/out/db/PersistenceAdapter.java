@@ -29,9 +29,21 @@ public class PersistenceAdapter {
 
 	/**
 	 * <b> id로 유저가 존재하는지 확인 </b>
+	 * @return 유저 존재 여부
 	 */
 	public boolean existsById(String id) {
 		return users.stream()
 			.anyMatch(user -> user.getId().equals(id));
+	}
+
+	/**
+	 * <b> id로 유저가 존재하는지 확인 </b>
+	 * @return 조회한 유저 아이디를 가지고 있는 유저
+	 */
+	public User findByUserId(String userId) {
+		return users.stream()
+			.filter(user -> user.getUserId().equals(userId))
+			.findFirst()
+			.orElse(null);
 	}
 }
