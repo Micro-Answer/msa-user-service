@@ -15,8 +15,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.example.msa.user.service.user.adapter.in.web.dto.request.UserSignUpRequest;
-import com.example.msa.user.service.user.adapter.in.web.dto.response.UserSignUpResponse;
-import com.example.msa.user.service.user.application.domain.User;
 import com.example.msa.user.service.user.application.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -38,36 +36,49 @@ class UserControllerTest {
 	void setUp() {
 		signUpRequest = UserSignUpRequest.builder()
 			.id("1")
-			.email("test1234@google.com")
+			.userId("testUser")
 			.pw("1234")
 			.role("USER")
-			.age(20)
 			.build();
 	}
 
 	@Test
-	@DisplayName("회원가입 요청에 대한 정상 응답 테스트")
+	@DisplayName("회원가입 요청에 대한 성공 응답 테스트")
 	void testSignUp_Success() throws Exception {
-		User user = User.builder()
-			.id("1")
-			.email("test1234@google.com")
-			.pw("1234")
-			.role("USER")
-			.age(20)
-			.build();
-		UserSignUpResponse signUpResponse = new UserSignUpResponse(user);
+		// UserService의 signUp 메서드가 true를 반환하도록 Mock 설정
+		Mockito.when(userService.signUp(
+				Mockito.anyString(),
+				Mockito.anyString(),
+				Mockito.anyString(),
+				Mockito.anyString()))
+			.thenReturn(true);
 
-		Mockito.when(userService.signUp(Mockito.any(UserSignUpRequest.class))).thenReturn(signUpResponse);
 		String jsonRequest = objectMapper.writeValueAsString(signUpRequest);
 
 		mockMvc.perform(post("/api/v1/user/sign-up")
 				.contentType(MediaType.APPLICATION_JSON)
 				.content(jsonRequest))
 			.andExpect(status().isOk())
-			.andExpect(jsonPath("$.id").value("1"))
-			.andExpect(jsonPath("$.email").value("test1234@google.com"))
-			.andExpect(jsonPath("$.pw").value("1234"))
-			.andExpect(jsonPath("$.role").value("USER"))
-			.andExpect(jsonPath("$.age").value(20));
+			.andExpect(jsonPath("$.result").value("회원가입 성공"));
+	}
+
+	@Test
+	@DisplayName("회원가입 요청 실패 테스트")
+	void testSignUp_Failure() throws Exception {
+		// UserService의 signUp 메서드가 false를 반환하도록 Mock 설정
+		Mockito.when(userService.signUp(
+				Mockito.anyString(),
+				Mockito.anyString(),
+				Mockito.anyString(),
+				Mockito.anyString()))
+			.thenReturn(false);
+
+		String jsonRequest = objectMapper.writeValueAsString(signUpRequest);
+
+		mockMvc.perform(post("/api/v1/user/sign-up")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(jsonRequest))
+			.andExpect(status().isInternalServerError())
+			.andExpect(jsonPath("$.result").value("회원가입 실패"));
 	}
 }

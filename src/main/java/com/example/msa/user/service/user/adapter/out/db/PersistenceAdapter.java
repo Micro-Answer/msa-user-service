@@ -1,9 +1,11 @@
 package com.example.msa.user.service.user.adapter.out.db;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.stereotype.Component;
 
-import com.example.msa.user.service.user.application.domain.User;
-import com.example.msa.user.service.user.application.repository.UserRepository;
+import com.example.msa.user.service.user.application.model.domain.User;
 
 import lombok.RequiredArgsConstructor;
 
@@ -13,19 +15,23 @@ import lombok.RequiredArgsConstructor;
 @Component
 @RequiredArgsConstructor
 public class PersistenceAdapter {
-	private final UserRepository userRepository;
+	private final List<User> users = new ArrayList<>();
 
 	/**
 	 * <b> 유저의 추가 정보 저장 </b>
 	 * <p>
-	 * - 임시로 이메일, 비밀번호, 역할, 나이로 지정
+	 * - 임시로 이메일, 비밀번호, 역할로 지정
 	 * </p>
 	 */
 	public void saveUser(User user) {
-		// TODO - MSA는 처음이라 어떤 에러를 던져야할지 모르겠습니다. 추후 수정하겠습니다.
-		// if (userRepository.existsById(user.getId())) {
-		// 	throw new InternalException("이미 존재하는 사용자입니다.");
-		// }
-		userRepository.save(user);
+		users.add(user);
+	}
+
+	/**
+	 * <b> id로 유저가 존재하는지 확인 </b>
+	 */
+	public boolean existsById(String id) {
+		return users.stream()
+			.anyMatch(user -> user.getId().equals(id));
 	}
 }

@@ -26,8 +26,13 @@ public class UserController {
 	private final UserService userService;
 
 	@PostMapping("/v1/user/sign-up")
-	public ResponseEntity<UserSignUpResponse> signUp(@RequestBody UserSignUpRequest userSignUpRequest) {
-		UserSignUpResponse UserSignUpResponse = userService.signUp(userSignUpRequest);
-		return new ResponseEntity<>(UserSignUpResponse, HttpStatus.OK);
+	public ResponseEntity<UserSignUpResponse> signUp(@RequestBody UserSignUpRequest body) {
+		boolean signUpSuccess = userService.signUp(body.getId(), body.getUserId(), body.getPw(), body.getRole());
+
+		if (!signUpSuccess) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+				.body(new UserSignUpResponse("회원가입 실패"));
+		}
+		return new ResponseEntity<>(new UserSignUpResponse("회원가입 성공"), HttpStatus.OK);
 	}
 }
