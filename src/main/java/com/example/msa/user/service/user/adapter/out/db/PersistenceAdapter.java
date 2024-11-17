@@ -1,7 +1,7 @@
 package com.example.msa.user.service.user.adapter.out.db;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.springframework.stereotype.Component;
 
@@ -15,35 +15,45 @@ import lombok.RequiredArgsConstructor;
 @Component
 @RequiredArgsConstructor
 public class PersistenceAdapter {
-	private final List<User> users = new ArrayList<>();
+    private final Map<String, User> users = new HashMap<>();
+    private int autoIncrement = 1;
 
-	/**
-	 * <b> 유저의 추가 정보 저장 </b>
-	 * <p>
-	 * - 임시로 이메일, 비밀번호, 역할로 지정
-	 * </p>
-	 */
-	public void saveUser(User user) {
-		users.add(user);
-	}
+    /**
+     * <b> 유저의 추가 정보 저장 </b>
+     * <p>
+     * - 임시로 이메일, 비밀번호, 역할로 지정
+     * </p>
+     */
+    public void saveUser(User user) {
+        if (users.containsKey(user.getId())) {
+            users.replace(user.getId(), user);
+            return;
+        }
+        String id = getStringId();
+        users.put(id, user);
+        user.save(id);
 
-	/**
-	 * <b> id로 유저가 존재하는지 확인 </b>
-	 * @return 유저 존재 여부
-	 */
-	public boolean existsById(String id) {
-		return users.stream()
-			.anyMatch(user -> user.getId().equals(id));
-	}
+        autoIncrement++;
+    }
 
-	/**
-	 * <b> id로 유저가 존재하는지 확인 </b>
-	 * @return 조회한 유저 아이디를 가지고 있는 유저
-	 */
-	public User findByUserId(String userId) {
-		return users.stream()
-			.filter(user -> user.getUserId().equals(userId))
-			.findFirst()
-			.orElse(null);
-	}
+    /**
+     * <b> id로 유저가 존재하는지 확인 </b>
+     * @return 조회한 유저 아이디를 가지고 있는 유저
+     */
+    public User findById(String id) {
+        return users.get(id);
+    }
+
+    /**
+     * <b> userId로 유저가 존재하는지 확인 </b>
+     * @return 유저 존재 여부
+     */
+    public boolean existsById(String userId) {
+        return users.values().stream()
+            .anyMatch(user -> user.getUserId().equals(userId));
+    }
+
+    private String getStringId() {
+        return String.valueOf(autoIncrement);
+    }
 }
