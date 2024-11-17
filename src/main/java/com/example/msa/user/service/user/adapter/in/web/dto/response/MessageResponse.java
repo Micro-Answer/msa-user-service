@@ -14,9 +14,9 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class MessageResponse {
-	private String result;
+    private String result;
 
-	public MessageResponse(String result) {
-		this.result = result;
-	}
+    public MessageResponse(String result) {
+        this.result = result;
+    }
 }
