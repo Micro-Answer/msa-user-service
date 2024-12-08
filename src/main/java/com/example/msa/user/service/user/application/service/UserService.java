@@ -30,12 +30,8 @@ public class UserService {
      * @param role 역할
      * @return 회원가입 성공 여부
      */
-    public boolean signUp(String userId, String pw, String role) {
-        if (persistenceAdapter.existsById(userId)) {
-            logger.log(Level.WARNING, "회원가입 실패");
-            return false;
-        }
-        User user = User.createUser(userId, pw, role);
+    public boolean signUp(String id, String pw, String role) {
+        User user = User.createUser(id, pw, role);
         persistenceAdapter.saveUser(user);
         return true;
     }
@@ -47,12 +43,12 @@ public class UserService {
      * @param pw 비밀번호
      * @return 로그인 성공 여부
      */
-    public boolean signIn(String userId, String pw) {
-        User user = persistenceAdapter.findById(userId);
-        if (user == null || !user.getPw().equals(pw)) {
-            logger.log(Level.WARNING, "로그인 실패 : 잘못된 ID 또는 비밀번호");
-            return false;
-        }
+    public boolean signIn(String id, String pw) {
+        User user = persistenceAdapter.findById(id);
+        // if (user == null || !user.getPw().equals(pw)) {
+        //     logger.log(Level.WARNING, "로그인 실패 : 잘못된 ID 또는 비밀번호");
+        //     return false;
+        // }
         return true;
     }
 }
