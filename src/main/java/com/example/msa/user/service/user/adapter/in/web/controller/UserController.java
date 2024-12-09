@@ -28,7 +28,7 @@ public class UserController {
 
     @PostMapping("/v1/user/sign-up")
     public ResponseEntity<MessageResponse> signUp(@RequestBody UserSignUpRequest body) {
-        boolean signUpSuccess = userService.signUp(body.getUserId(), body.getPw(), body.getRole());
+        boolean signUpSuccess = userService.signUp(body.getId(), body.getPw(), body.getRole());
 
         if (!signUpSuccess) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -39,7 +39,7 @@ public class UserController {
 
     @PostMapping("/v1/user/sign-in")
     public ResponseEntity<MessageResponse> signIn(@RequestBody UserSignInRequest body) {
-        boolean signInSuccess = userService.signIn(body.getUserId(), body.getPw());
+        boolean signInSuccess = userService.signIn(body.getId(), body.getPw());
 
         if (!signInSuccess) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
