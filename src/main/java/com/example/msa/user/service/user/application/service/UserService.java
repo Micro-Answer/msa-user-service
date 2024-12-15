@@ -25,7 +25,6 @@ public class UserService {
      * <b> 유저 회원가입 로직 수행 </b>
      *
      * @param id 아이디
-     * @param userId 유저 아이디
      * @param pw 비밀번호
      * @param role 역할
      * @return 회원가입 성공 여부
@@ -39,7 +38,6 @@ public class UserService {
     /**
      * <b> 유저 로그인 로직 수행 </b>
      *
-     * @param userId 유저 아이디
      * @param pw 비밀번호
      * @return 로그인 성공 여부
      */
