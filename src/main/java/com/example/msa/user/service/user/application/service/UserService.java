@@ -4,7 +4,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.example.msa.user.service.user.adapter.out.db.PersistenceAdapter;
 import com.example.msa.user.service.user.domain.model.User;
@@ -16,7 +15,6 @@ import lombok.RequiredArgsConstructor;
  */
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class UserService {
     private static final Logger logger = Logger.getLogger(UserService.class.getName());
     private final PersistenceAdapter persistenceAdapter;
